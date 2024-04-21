@@ -1,0 +1,13 @@
+{
+  "name": "hanasu-api",
+  "version": "1.0.0",
+  "description": "A REST API that serves articles created by registered users through public and protected endpoints",
+  "main": "src/index.js",
+  "repository": "git@github.com:michaelhpet/hanasu-api.git",
+  "author": "Michael Peter <michaelhpet@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
