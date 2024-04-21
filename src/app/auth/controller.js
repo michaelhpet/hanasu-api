@@ -1,24 +1,42 @@
-const { success } = require("../../lib/utils");
+const { success, AppError } = require("../../lib/utils");
+const userService = require("../user/service");
 
 class AuthController {
   /**
    * Create a new user
    * @param {import("express").Request} req Request object
    * @param {import("express").Response} res Response object
+   * @param {import("express").NextFunction} next Next function
    */
-  signup(req, res) {
-    const response = success({ user: null }, "User created successfully");
-    res.json(response);
+  async signup(req, res, next) {
+    try {
+      const payload = req.body;
+      const user = await userService.createUser(payload);
+      const response = success({ user }, "User created successfully");
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
    * Login a user
    * @param {import("express").Request} req Request object
    * @param {import("express").Response} res Response object
+   * @param {import("express").NextFunction} next Next function
    */
-  login(req, res) {
-    const response = success({ user: null }, "Login successful");
-    res.json(response);
+  async login(req, res, next) {
+    try {
+      const { email, password } = req.body;
+      const user = await userService.getUser(email, true);
+      if (!user) throw new AppError(404, "User not found");
+      if (!(await user.isPassword(password)))
+        throw new AppError(401, "Password is not correct");
+      const response = success({ user }, "Login successful");
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

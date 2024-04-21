@@ -39,7 +39,8 @@ function getPagination(pagination, count, total_records) {
  * @param {string} message
  * @returns Response payload
  */
-function success(res, data, message) {
+function success(data, message) {
+  logger.info({ message, data });
   return { status: "success", message, data };
 }
 

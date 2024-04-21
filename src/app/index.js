@@ -5,6 +5,7 @@ const authRouter = require("./auth");
 const appLogger = require("../lib/middleware/logger");
 const { AppError } = require("../lib/utils");
 const { CelebrateError } = require("celebrate");
+const { default: mongoose } = require("mongoose");
 
 const app = express();
 app.use(cors());
@@ -41,4 +42,19 @@ app.use((err, _, res, __) => {
 });
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+async function main() {
+  try {
+    await mongoose.connect(process.env.DATABASE_URI, { dbName: "hanasu" });
+    console.log("Database connected successfully 🚀");
+    app.listen(PORT, () => console.log(`Server started on port ${PORT} 🚀`));
+  } catch (error) {
+    console.log("Failed to start server", error.message, "\n");
+    console.log("Retrying in a moment...");
+    setTimeout(() => {
+      main();
+    }, 1000);
+  }
+}
+
+main();
