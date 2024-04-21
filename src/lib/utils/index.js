@@ -1,4 +1,5 @@
 const { celebrate } = require("celebrate");
+const winston = require("winston");
 
 /**
  * Get pagination metadata
@@ -55,4 +56,15 @@ class AppError extends Error {
   }
 }
 
-module.exports = { getPagination, success, AppError };
+const logger = winston.createLogger({
+  transports: [
+    ...(process.env.NODE_ENV !== "production"
+      ? [new winston.transports.Console({ level: "http" })]
+      : []),
+    new winston.transports.File({ filename: "error.log", level: "error" }),
+    new winston.transports.File({ filename: "info.log", level: "info" }),
+    new winston.transports.File({ filename: "http.log", level: "http" }),
+  ],
+});
+
+module.exports = { getPagination, success, AppError, logger };

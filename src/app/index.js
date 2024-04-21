@@ -2,12 +2,14 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const authRouter = require("./auth");
+const appLogger = require("../lib/middleware/logger");
 const { AppError } = require("../lib/utils");
 const { CelebrateError } = require("celebrate");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(appLogger);
 app.use("/auth", authRouter);
 
 app.use((req, res) => {
