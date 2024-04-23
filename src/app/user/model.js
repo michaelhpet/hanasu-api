@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
+const Article = require("../article/model");
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
@@ -8,9 +9,22 @@ const userSchema = new mongoose.Schema({
   last_name: { type: String, required: true },
 });
 
+userSchema.virtual("articles", {
+  ref: "Article",
+  localField: "_id",
+  foreignField: "author",
+});
+
 userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+userSchema.pre("remove", async function (next) {
+  const user = this;
+  await Article.deleteMany({ author: user._id });
+  next();
 });
 
 const User = mongoose.model("User", userSchema);

@@ -6,12 +6,15 @@ const appLogger = require("../lib/middleware/logger");
 const { AppError } = require("../lib/utils");
 const { CelebrateError } = require("celebrate");
 const { default: mongoose } = require("mongoose");
+const articleRouter = require("./article");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(appLogger);
+
 app.use("/auth", authRouter);
+app.use("/article", articleRouter);
 
 app.use((req, res) => {
   res.status(404).json({
