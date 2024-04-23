@@ -22,8 +22,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.pre("remove", async function (next) {
-  const user = this;
-  await Article.deleteMany({ author: user._id });
+  await Article.deleteMany({ author: this._id });
   next();
 });
 

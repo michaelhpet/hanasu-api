@@ -67,6 +67,16 @@ function generateToken(user) {
   });
 }
 
+/**
+ * Calculate average read time of given text
+ * @param {string} text Text to parse
+ */
+function calculateReadTime(text) {
+  const AVERAGE_WORDS_PER_MINUTE = 200;
+  const totalMinutes = text.split(" ").length / AVERAGE_WORDS_PER_MINUTE;
+  return totalMinutes * 60;
+}
+
 const logger = winston.createLogger({
   transports: [
     ...(process.env.NODE_ENV !== "production"
@@ -78,4 +88,11 @@ const logger = winston.createLogger({
   ],
 });
 
-module.exports = { getPagination, success, AppError, logger, generateToken };
+module.exports = {
+  getPagination,
+  success,
+  AppError,
+  logger,
+  generateToken,
+  calculateReadTime,
+};

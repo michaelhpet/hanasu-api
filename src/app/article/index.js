@@ -11,4 +11,16 @@ articleRouter.post(
   articleController.createArticle
 );
 
+articleRouter.get(
+  "/",
+  articleValidator.getArticles,
+  articleController.getArticles
+);
+
+articleRouter.get(
+  "/:id",
+  articleValidator.getArticle,
+  articleController.getArticle
+);
+
 module.exports = articleRouter;
