@@ -13,9 +13,23 @@ class ArticleService {
   }
 
   async getArticles(payload) {
-    const { page = 1, limit = 20, ...query } = payload;
+    const { page = 1, limit = 20, search, ...query } = payload;
     const offset = (page - 1) * limit;
-    const articles = await Article.find(query).skip(offset).limit(limit);
+    const articles = await Article.find({
+      ...query,
+      ...(search
+        ? {
+            $or: [
+              { $text: { $search: search } },
+              { tags: search },
+              { "author.first_name": { $regex: new RegExp(search, "i") } },
+              { "author.last_name": { $regex: new RegExp(search, "i") } },
+            ],
+          }
+        : {}),
+    })
+      .skip(offset)
+      .limit(limit);
     for (const article of articles) {
       await article.populate("author");
     }
