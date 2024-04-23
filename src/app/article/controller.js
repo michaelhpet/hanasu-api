@@ -17,3 +17,6 @@ class ArticleController {
     }
   }
 }
+
+const articleController = new ArticleController();
+module.exports = articleController;

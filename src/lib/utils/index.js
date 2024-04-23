@@ -1,5 +1,5 @@
-const { celebrate } = require("celebrate");
 const winston = require("winston");
+const jsonwebtoken = require("jsonwebtoken");
 
 /**
  * Get pagination metadata
@@ -57,6 +57,16 @@ class AppError extends Error {
   }
 }
 
+/**
+ * Generate JWT token for a user
+ * @param {object} user User to generate token for
+ */
+function generateToken(user) {
+  return jsonwebtoken.sign(user, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
+}
+
 const logger = winston.createLogger({
   transports: [
     ...(process.env.NODE_ENV !== "production"
@@ -68,4 +78,4 @@ const logger = winston.createLogger({
   ],
 });
 
-module.exports = { getPagination, success, AppError, logger };
+module.exports = { getPagination, success, AppError, logger, generateToken };

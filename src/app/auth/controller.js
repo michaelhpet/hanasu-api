@@ -1,4 +1,4 @@
-const { success, AppError } = require("../../lib/utils");
+const { success, AppError, generateToken } = require("../../lib/utils");
 const userService = require("../user/service");
 
 class AuthController {
@@ -12,7 +12,8 @@ class AuthController {
     try {
       const payload = req.body;
       const user = await userService.createUser(payload);
-      const response = success({ user }, "User created successfully");
+      const token = generateToken(user.toObject());
+      const response = success({ token, user }, "User created successfully");
       res.json(response);
     } catch (error) {
       next(error);
@@ -32,7 +33,8 @@ class AuthController {
       if (!user) throw new AppError(404, "User not found");
       if (!(await user.isPassword(password)))
         throw new AppError(401, "Password is not correct");
-      const response = success({ user }, "Login successful");
+      const token = generateToken(user.toObject());
+      const response = success({ token, user }, "Login successful");
       res.json(response);
     } catch (error) {
       next(error);
