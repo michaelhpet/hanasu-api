@@ -50,7 +50,7 @@ class ArticleService {
   }
 
   async updateArticle(id, data) {
-    return await Article.findByIdAndUpdate(id, data);
+    return await Article.findByIdAndUpdate(id, data, { new: true });
   }
 }
 

@@ -24,6 +24,13 @@ articleRouter.get(
 );
 
 articleRouter.patch(
+  "/:id",
+  authenticate,
+  articleValidator.updateArticle,
+  articleController.updateArticle
+);
+
+articleRouter.patch(
   "/:id/publish",
   authenticate,
   articleController.publishArticle

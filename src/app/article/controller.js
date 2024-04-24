@@ -118,6 +118,26 @@ class ArticleController {
       next(error);
     }
   }
+
+  /**
+   * Update an article
+   * @param {import("express").Request} req Request object
+   * @param {import("express").Response} res Response object
+   * @param {import("express").NextFunction} next Next function
+   */
+  async updateArticle(req, res, next) {
+    try {
+      let article = await articleService.getArticle(req.params.id);
+      if (article.author._id.toString() !== req.user._id)
+        throw new AppError(403, "User not authorized to update this article");
+      article = await articleService.updateArticle(req.params.id, req.body);
+      res.json(success({ article }, "Article updated successfully"));
+    } catch (error) {
+      if (error.code === 11000)
+        next(new AppError(400, "Article title must be unique"));
+      else next(error);
+    }
+  }
 }
 
 const articleController = new ArticleController();
