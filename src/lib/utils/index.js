@@ -9,7 +9,7 @@ const jsonwebtoken = require("jsonwebtoken");
  * @returns Pagination metadata object
  */
 function getPagination(pagination, count, total_records) {
-  let { page = 1, limit = 10 } = pagination;
+  let { page = 1, limit = 20 } = pagination;
 
   const total_pages = Math.ceil(total_records / limit);
   const has_previous = Boolean(page - 1);

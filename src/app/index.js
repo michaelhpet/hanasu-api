@@ -5,8 +5,9 @@ const authRouter = require("./auth");
 const appLogger = require("../lib/middleware/logger");
 const { AppError } = require("../lib/utils");
 const { CelebrateError } = require("celebrate");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const articleRouter = require("./article");
+const userRouter = require("./user");
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,7 @@ app.use(appLogger);
 
 app.use("/auth", authRouter);
 app.use("/article", articleRouter);
+app.use("/user", userRouter);
 
 app.use((req, res) => {
   res.status(404).json({

@@ -12,9 +12,11 @@ class ArticleService {
     });
   }
 
-  async getArticles(payload) {
+  async getArticles(payload, user = null) {
     const { page = 1, limit = 20, search, ...query } = payload;
     const offset = (page - 1) * limit;
+    if (user) query["author._id"] = user._id;
+    else query.state = "published";
     const articles = await Article.find({
       ...query,
       ...(search
@@ -43,8 +45,12 @@ class ArticleService {
     return article;
   }
 
-  async getCount() {
-    return await Article.countDocuments();
+  async getCount(user = null) {
+    return await Article.countDocuments(user ? { author: user._id } : {});
+  }
+
+  async updateArticle(id, data) {
+    return await Article.findByIdAndUpdate(id, data);
   }
 }
 

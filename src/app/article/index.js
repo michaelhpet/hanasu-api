@@ -1,6 +1,6 @@
 const express = require("express");
-const articleValidator = require("./validator");
 const authenticate = require("../../lib/middleware/auth");
+const articleValidator = require("./validator");
 const articleController = require("./controller");
 const articleRouter = express.Router();
 
@@ -22,5 +22,13 @@ articleRouter.get(
   articleValidator.getArticle,
   articleController.getArticle
 );
+
+articleRouter.patch(
+  "/:id/publish",
+  authenticate,
+  articleController.publishArticle
+);
+
+articleRouter.patch("/:id/draft", authenticate, articleController.draftArticle);
 
 module.exports = articleRouter;
