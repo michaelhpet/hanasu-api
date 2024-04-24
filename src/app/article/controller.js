@@ -64,7 +64,10 @@ class ArticleController {
   async getArticle(req, res, next) {
     try {
       const article = await articleService.getArticle(req.params.id);
-      if (article.author._id !== req.user._id && article.state === "draft")
+      if (
+        article.author._id.toString() !== req.user._id &&
+        article.state === "draft"
+      )
         throw new AppError(401, "Article is not published");
       article.read_count += 1;
       await article.save();
@@ -83,7 +86,7 @@ class ArticleController {
   async publishArticle(req, res, next) {
     try {
       const article = await articleService.getArticle(req.params.id);
-      if (article.author._id !== req.user._id)
+      if (article.author._id.toString() !== req.user._id)
         throw new AppError(403, "User not authorized to update this article");
       if (article.state === "published")
         throw new AppError(400, "This article has already been published");
@@ -104,7 +107,7 @@ class ArticleController {
   async draftArticle(req, res, next) {
     try {
       const article = await articleService.getArticle(req.params.id);
-      if (article.author._id !== req.user._id)
+      if (article.author._id.toString() !== req.user._id)
         throw new AppError(403, "User not authorized to update this article");
       if (article.state === "draft")
         throw new AppError(400, "This article is already in draft");
